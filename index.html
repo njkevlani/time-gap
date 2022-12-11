@@ -33,51 +33,56 @@
         const timeFromParamInt = params.get("t");
         const timeFromParam = new Date(timeFromParamInt * 1000);
 
-        const curTime = new Date();
+        function timeSince() {
+            const curTime = new Date();
 
-        const timeDiffInt = Math.abs(curTime - timeFromParam);
+            const timeDiffInt = Math.abs(curTime - timeFromParam);
 
-        const timeBlocks = [
-            {unit: "Year", ms: 365 * 24 * 60 * 60 * 1000},
-            {unit: "Day", ms: 24 * 60 * 60 * 1000},
-            {unit: "Hour", ms: 60 * 60 * 1000},
-            {unit: "Minute", ms: 60 * 1000},
-            {unit: "Second", ms: 1000},
-        ];
+            const timeBlocks = [
+                {unit: "Year", ms: 365 * 24 * 60 * 60 * 1000},
+                {unit: "Day", ms: 24 * 60 * 60 * 1000},
+                {unit: "Hour", ms: 60 * 60 * 1000},
+                {unit: "Minute", ms: 60 * 1000},
+                {unit: "Second", ms: 1000},
+            ];
 
-        let remainingTime = timeDiffInt;
+            let remainingTime = timeDiffInt;
 
-        let timeDiffList = [];
-        for (timeBlock of timeBlocks) {
-            const floorPart = Math.floor(remainingTime / timeBlock.ms);
-            if (floorPart > 0) {
-                remainingTime -= (floorPart * timeBlock.ms);
-                timeDiffList.push({unit: timeBlock.unit, amount: floorPart});
+            let timeDiffList = [];
+            for (timeBlock of timeBlocks) {
+                const floorPart = Math.floor(remainingTime / timeBlock.ms);
+                if (floorPart > 0) {
+                    remainingTime -= (floorPart * timeBlock.ms);
+                    timeDiffList.push({unit: timeBlock.unit, amount: floorPart});
+                }
             }
-        }
 
-        if (remainingTime > 0) {
-            timeDiffList.push({unit: 'Millisecond', amount: remainingTime});
-        }
+            if (remainingTime > 0) {
+                timeDiffList.push({unit: 'Millisecond', amount: remainingTime});
+            }
 
-        const timeDiffStrList = [];
-        for (timeDiff of timeDiffList) {
-            if (timeDiff.amount > 1) {
-                timeDiffStrList.push(`${timeDiff.amount} ${timeDiff.unit}s`);
+            const timeDiffStrList = [];
+            for (timeDiff of timeDiffList) {
+                if (timeDiff.amount > 1) {
+                    timeDiffStrList.push(`${timeDiff.amount} ${timeDiff.unit}s`);
+                } else {
+                    timeDiffStrList.push(`${timeDiff.amount} ${timeDiff.unit}`);
+                }
+            }
+
+            let timeDiffStr = '';
+            if (timeDiffStrList.length > 1) {
+                timeDiffStr = timeDiffStrList.slice(0, -1).join(', ') + ' and ' + timeDiffStrList.at(-1);
             } else {
-                timeDiffStrList.push(`${timeDiff.amount} ${timeDiff.unit}`);
+                timeDiffStr = timeDiffStrList.at(-1);
             }
+
+            const message = `It has been ${timeDiffStr} since ${timeFromParam.toString()}`;
+
+            document.getElementById('time-since').innerText = message;
         }
 
-        let timeDiffStr = '';
-        if (timeDiffStrList.length > 1) {
-            timeDiffStr = timeDiffStrList.slice(0, -1).join(', ') + ' and ' + timeDiffStrList.at(-1);
-        } else {
-            timeDiffStr = timeDiffStrList.at(-1);
-        }
-
-        const message = `It has been ${timeDiffStr} since ${timeFromParam.toString()}`;
-
-        document.getElementById('time-since').innerText = message;
+        timeSince(timeFromParam)
+        window.setInterval(timeSince, 1000)
     </script>
 </html>
