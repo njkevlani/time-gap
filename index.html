@@ -32,9 +32,11 @@
         const params = new URLSearchParams(document.location.search);
         const timeFromParamInt = params.get("t");
         const timeFromParam = new Date(timeFromParamInt * 1000);
+        timeFromParam.setMilliseconds(0);
 
         function timeSince() {
             const curTime = new Date();
+            curTime.setMilliseconds(0)
 
             const timeDiffInt = Math.abs(curTime - timeFromParam);
 
@@ -55,10 +57,6 @@
                     remainingTime -= (floorPart * timeBlock.ms);
                     timeDiffList.push({unit: timeBlock.unit, amount: floorPart});
                 }
-            }
-
-            if (remainingTime > 0) {
-                timeDiffList.push({unit: 'Millisecond', amount: remainingTime});
             }
 
             const timeDiffStrList = [];
