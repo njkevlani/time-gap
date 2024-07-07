@@ -74,10 +74,16 @@
             } else {
                 timeDiffStr = timeDiffStrList.at(-1);
             }
-
-            const message = `It has been ${timeDiffStr} since ${timeFromParam.toString()}`;
-
-            document.getElementById('time-since').innerText = message;
+    
+            const targetDiv = document.getElementById('time-since');
+    
+            if (curTime - timeFromParam > 0) {
+                targetDiv.innerText = `It has been ${timeDiffStr} since ${timeFromParam.toString()}`;
+            } else if (curTime - timeFromParam < 0) {
+                targetDiv.innerText = `${timeDiffStr} to go for ${timeFromParam.toString()}`;
+            } else {
+                targetDiv.innerText = `It is exactly ${timeFromParam.toString()}`;
+            }
         }
 
         timeSince()
